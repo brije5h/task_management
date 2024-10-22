@@ -57,7 +57,7 @@ router.delete("/delete-task/:id", authenticateToken, async(req,res)=>{
     }
 });
 
-//update Task
+//update task
 router.put("/update-task/:id", authenticateToken, async(req,res)=>{
     try{
         const { id } = req.params;
@@ -103,6 +103,63 @@ router.put("/update-completed-task/:id", authenticateToken, async(req,res)=>{
         
         console.log('Completed!');
         res.status(200).json({message:"Task Completed"});
+
+    }catch{
+        console.log(err);
+        return res.status(500).json({message:"Internal server error"})
+    }
+});
+
+//get important task
+router.get("/get-imp-tasks", authenticateToken, async(req,res)=>{
+    try{
+        const { id } = req.headers;
+        const Data = await User.findById(id).populate({
+            path: "tasks",
+            match: { important:true },
+            options: { sort:{ createdAt:-1 }},
+        });
+        const ImpTaskData = Data.tasks;
+        console.log("important data fetched!");
+        res.status(200).json({data:ImpTaskData});
+
+    }catch{
+        console.log(err);
+        return res.status(500).json({message:"Internal server error"})
+    }
+});
+
+//get completed task
+router.get("/get-complete-tasks", authenticateToken, async(req,res)=>{
+    try{
+        const { id } = req.headers;
+        const Data = await User.findById(id).populate({
+            path: "tasks",
+            match: { complete:true },
+            options: { sort:{ createdAt:-1 }},
+        });
+        const CompTaskData = Data.tasks;
+        console.log("Completed data fetched!");
+        res.status(200).json({data:CompTaskData});
+
+    }catch{
+        console.log(err);
+        return res.status(500).json({message:"Internal server error"})
+    }
+});
+
+//get incomplete task
+router.get("/get-incomplete-tasks", authenticateToken, async(req,res)=>{
+    try{
+        const { id } = req.headers;
+        const Data = await User.findById(id).populate({
+            path: "tasks",
+            match: { complete: false },
+            options: { sort:{ createdAt:-1 }},
+        });
+        const IncompleteTaskData = Data.tasks;
+        console.log("Completed data fetched!");
+        res.status(200).json({data:IncompleteTaskData});
 
     }catch{
         console.log(err);
