@@ -4,7 +4,7 @@ import Cards from '../components/Cards';
 const CompletedTask = () => {
     return (
         <>
-            <div><Cards /></div>
+            <div className='bg-red-400'><Cards /></div>
         </>
     )
 }

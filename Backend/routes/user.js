@@ -46,14 +46,20 @@ router.post("/login", async(req,res)=>{
 
     try{
         const { username,password } = req.body;
-        const existingUser = await User.findOne( username );
+        const existingUser = await User.findOne({ username });
         if(!existingUser){
             return res.status(400).json({message:"Invalid Credentials"});
         }
-        bcrypt.compare(password, existingUser.password,(err,data)=>{
+        bcrypt.compare(password, existingUser.password,(err, data)=>{
+            if(err){
+                console.log(err);
+                res.status(400).json({message:"Error comparing passwords"});
+            }
             if(data){
-                console.log("`${username}`logged in")
-                const token = jwt.sign({authClaims},"tcmTM",{expiresIn:"2d"});
+                const authClaims = [{name:username},{jti:jwt.sign({}, "tcmTM")}]
+                console.log(`${username}logged in`)
+                const token = jwt.sign({authClaims},"tcmTM",{expiresIn:"1d"});
+                res.status(200).json({id: existingUser._id ,token:token});
             }
             else{
                 return res
