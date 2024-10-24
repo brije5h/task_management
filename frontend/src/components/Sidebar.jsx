@@ -3,7 +3,9 @@ import { CgNotes } from "react-icons/cg";
 import { MdLabelImportant } from "react-icons/md";
 import { FaCheckDouble } from "react-icons/fa6";
 import { TbNotebookOff } from "react-icons/tb";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { authActions } from '../store/auth';
 
 const Sidebar = () => {
     const data = [
@@ -28,7 +30,14 @@ const Sidebar = () => {
             link: "/incompleteTasks",
         },
     ];
-
+    const history = useNavigate();
+    const dispatch = useDispatch();
+    const logout = ()=>{
+        dispatch(authActions.logout());
+        localStorage.clear("id");
+        localStorage.clear("token");
+        history("/login");
+    }
     return (
         <>
             <div>
@@ -42,7 +51,7 @@ const Sidebar = () => {
                 ))}
             </div>
             <div className='mt-16'>
-                <button className='bg-gray-600 w-full p-2 rounded'>Log Out</button>
+                <button className='bg-gray-600 w-full p-2 rounded hover:bg-gray-500' onClick={logout}>Log Out</button>
             </div>
         </>
     );

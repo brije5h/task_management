@@ -8,10 +8,10 @@ const TaskAPI = require("./routes/task");
 
 app.use(cors());
 app.use(express.json());
-//localhost:3000/api/v1/UserAPI
+//localhost:8000/api/v1/UserAPI
 app.use("/api/v1",UserAPI);
 
-//localhost:3000/api/v2/TaskAPI
+//localhost:8000/api/v2/TaskAPI
 app.use("/api/v2",TaskAPI);
 
 
@@ -19,7 +19,7 @@ app.use("/", (req, res) => {
     res.send("Hello from backend side!");
 });
 
-const PORT = 3000;
+const PORT = 8000;
 
 app.listen(PORT, ()=>{
     console.log("Server started");

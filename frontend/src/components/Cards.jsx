@@ -62,7 +62,7 @@ const Cards = ({ home, setInputDiv }) => {
     return (
         <div className='grid grid-cols-4 gap-4 p-4'>
             {data && data.map((items, i) => (
-                <div className='flex flex-col justify-between bg-gray-800 rounded-lg p-4 hover:scale-105 cursor-pointer transition-all'>
+                <div key={i} className='flex flex-col justify-between bg-gray-800 rounded-lg p-4 hover:scale-105 cursor-pointer transition-all'>
                     <div className=''>
                         <h1 className='text-xl font-semibold'>{items.title}</h1>
                         <p className='text-gray-300'>{items.desc}</p>
