@@ -1,10 +1,47 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { IoClose } from "react-icons/io5";
+import axios from 'axios';
+
 
 const InputData = ({ inputDiv, setInputDiv }) => {
+    
+    const [Data, setData] = useState({
+        title:"",
+        desc:""
+    });
+    
     // Function to hide the form
     const hideForm = () => {
         setInputDiv("hidden"); // Hide the form by setting "hidden"
+    };
+    
+    const change = (e) => {
+        const {name, value} = e.target;
+        setData({...Data,[name]:value});
+    }
+
+    const submitData = async() => {
+        if(Data.title === "" || Data.desc === ""){
+            alert("All fields are required!");
+        } else{
+            try{
+                const response = await axios.post("http://localhost:8000/api/v2/create-task",
+                    Data,
+                    {headers:{
+                        id: localStorage.getItem("id"),
+                        authorization: `Bearer ${localStorage.getItem("token")}`,
+                    }}
+                )
+                console.log(response.data.message);
+                setData({
+                    title:"",
+                    desc:"",
+                });
+                hideForm();
+            } catch(err){
+                console.log(err);
+            }
+        }
     };
 
     return (
@@ -26,6 +63,8 @@ const InputData = ({ inputDiv, setInputDiv }) => {
                         name="title" 
                         placeholder='Title' 
                         className='px-3 py-4 rounded w-full bg-gray-700'
+                        value={Data.title}
+                        onChange={change}
                     />
                     <textarea 
                         name="desc" 
@@ -33,8 +72,11 @@ const InputData = ({ inputDiv, setInputDiv }) => {
                         rows="10"
                         placeholder='Description'
                         className='px-3 py-4 rounded w-full bg-gray-700 mt-3'
+                        value={Data.desc}
+                        onChange={change}
                     ></textarea>
-                    <button className='px-3 py-2 bg-blue-400 rounded text-black text-xl font-semibold'>
+                    <button className='px-3 py-2 bg-blue-400 rounded text-black text-xl font-semibold'
+                    onClick={submitData}>
                         Submit
                     </button>
                 </div>

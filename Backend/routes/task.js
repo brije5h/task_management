@@ -8,8 +8,6 @@ const { authenticateToken } = require("./auth");
 router.post("/create-task", authenticateToken , async (req,res)=>{
     try{
         const { title, desc } = req.body;
-        console.log("Header data.....");
-        console.log(req.headers);
         const { id } = req.headers;
         const newTask = new Task({ title:title, desc:desc});
         const saveTask = await newTask.save();
@@ -31,11 +29,9 @@ router.get("/get-all-tasks", authenticateToken, async(req,res)=>{
             path: "tasks",
             options: { sort:{ createdAt:-1 }},
         });
-        console.log(`${userData} data fetched!`);
         res.status(200).json({data:userData});
 
     }catch{
-        console.log(err);
         return res.status(500).json({message:"Internal server error"})
     }
 });
@@ -47,12 +43,10 @@ router.delete("/delete-task/:id", authenticateToken, async(req,res)=>{
         const userId = req.headers.id;
 
         await Task.findByIdAndDelete(id);
-        await User.findByIdAndUpdate(userId, { $pull: { tasks:id } } )
-        console.log('task deleted!');
+        await User.findByIdAndUpdate(userId, { $pull: { tasks:id } } );
         res.status(200).json({message:"Task deleted"});
 
     }catch{
-        console.log(err);
         return res.status(500).json({message:"Internal server error"})
     }
 });
@@ -69,7 +63,6 @@ router.put("/update-task/:id", authenticateToken, async(req,res)=>{
         res.status(200).json({message:"Task Updated"});
 
     }catch{
-        console.log(err);
         return res.status(500).json({message:"Internal server error"})
     }
 });
@@ -86,8 +79,7 @@ router.put("/update-imp-task/:id", authenticateToken, async(req,res)=>{
         console.log('Mark as important!');
         res.status(200).json({message:"Marked as Important"});
 
-    }catch(err){
-        console.log(err);
+    }catch{
         return res.status(500).json({message:"Internal server error"})
     }
 });
@@ -101,11 +93,10 @@ router.put("/update-completed-task/:id", authenticateToken, async(req,res)=>{
 
         await Task.findByIdAndUpdate(id, { complete: !CompTask });
         
-        console.log('Completed!');
+        console.log("Marked as complete");
         res.status(200).json({message:"Task Completed"});
 
-    }catch(err){
-        console.log(err);
+    }catch{
         return res.status(500).json({message:"Internal server error"})
     }
 });
