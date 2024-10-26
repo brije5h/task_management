@@ -79,14 +79,14 @@ router.put("/update-imp-task/:id", authenticateToken, async(req,res)=>{
     try{
         const { id } = req.params;
         const TaskData = await Task.findById(id);
-        const ImptTask = TaskData.important;
+        const ImpTask = TaskData.important;
 
         await Task.findByIdAndUpdate(id, { important: !ImpTask });
         
         console.log('Mark as important!');
         res.status(200).json({message:"Marked as Important"});
 
-    }catch{
+    }catch(err){
         console.log(err);
         return res.status(500).json({message:"Internal server error"})
     }
@@ -104,7 +104,7 @@ router.put("/update-completed-task/:id", authenticateToken, async(req,res)=>{
         console.log('Completed!');
         res.status(200).json({message:"Task Completed"});
 
-    }catch{
+    }catch(err){
         console.log(err);
         return res.status(500).json({message:"Internal server error"})
     }
